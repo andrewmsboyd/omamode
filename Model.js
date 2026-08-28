@@ -17,11 +17,33 @@ function parseMonitorLine(line) {
   return match ? match[1] : null
 }
 
+// Theme names come from directory names under themes/ — locally writable,
+// so not attacker-remote, but still untrusted text by the time it reaches
+// Dropdown.qml (shared, first-party, out of this plugin's control), whose
+// Text elements default to Text.AutoText. A name containing `<img ...>` or
+// similar would auto-detect as rich text and trigger resource loading, and
+// an unbounded name/list length could bloat the long-lived shell process.
+// Strip markup-triggering characters and cap both per-name and list length
+// here, since we can't set textFormat on a component we don't own.
+var MAX_THEME_NAME_LENGTH = 64
+var MAX_THEME_COUNT = 200
+
+function sanitizeThemeName(name) {
+  var stripped = name.replace(/[<>&]/g, "")
+  if (stripped.length > MAX_THEME_NAME_LENGTH) {
+    stripped = stripped.slice(0, MAX_THEME_NAME_LENGTH - 1) + "…"
+  }
+  return stripped
+}
+
 function parseThemeList(output) {
   var text = String(output === undefined || output === null ? "" : output)
   return text.split("\n")
     .map(function(line) { return line.trim() })
     .filter(function(line) { return line.length > 0 })
+    .map(sanitizeThemeName)
+    .filter(function(line) { return line.length > 0 })
+    .slice(0, MAX_THEME_COUNT)
 }
 
 // "H:MM" / "HH:MM" -> minutes since midnight, or null if unparseable.
@@ -112,6 +134,7 @@ if (typeof module !== "undefined") {
     modeFromColorSchemeValue: modeFromColorSchemeValue,
     parseMonitorLine: parseMonitorLine,
     parseThemeList: parseThemeList,
+    sanitizeThemeName: sanitizeThemeName,
     parseTimeToMinutes: parseTimeToMinutes,
     formatMinutes: formatMinutes,
     colorLuminance: colorLuminance,
