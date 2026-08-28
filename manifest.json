@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "io.github.andrewmsboyd.omamode",
+  "name": "Omamode",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "andrewmsboyd",
+  "description": "Switch GNOME color-scheme and the default Omarchy theme together, manually or on a schedule",
+  "kinds": [
+    "service",
+    "bar-widget"
+  ],
+  "keepLoaded": true,
+  "entryPoints": {
+    "service": "Service.qml",
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Omamode",
+    "description": "Light/Dark mode switch with per-mode default themes and a daily schedule",
+    "category": "Appearance",
+    "allowMultiple": false
+  }
+}
