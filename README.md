@@ -82,6 +82,17 @@ editable from the dropdown; the underlying keys are `lightTheme`, `darkTheme`,
 omarchy plugin remove io.github.andrewmsboyd.omamode
 ```
 
+## Attribution
+
+The bulk of this plugin's design and implementation — architecture, Service/
+BarWidget code, the icon-contrast fix, marketplace packaging — was written by
+[Claude](https://claude.com/claude-code) (Anthropic), working interactively
+with [@andrewmsboyd](https://github.com/andrewmsboyd), who directed the
+design, tested it on real hardware, and reviewed/approved every change.
+Noted here for transparency since GitHub's Contributors graph only credits
+identities tied to a real linked account, which doesn't exist for an AI
+assistant working locally.
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
