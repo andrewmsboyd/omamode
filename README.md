@@ -14,6 +14,8 @@ follows automatically.
   schedule is on overrides it only until the next scheduled boundary, then
   the schedule resumes.
 
+![Omamode dropdown](assets/dropdown.png)
+
 ## Installation
 
 ```
