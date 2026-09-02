@@ -169,18 +169,20 @@ BarWidget {
         foreground: root.bar.foreground
       }
 
-      Dropdown {
+      SearchableDropdown {
         width: parent.width
         label: "Light theme"
+        placeholderText: "Search themes…"
         options: root.themeOptions
         value: root.setting("lightTheme", "Flexoki Light")
         foreground: root.bar.foreground
         onChanged: function(v) { root.updateSetting({ lightTheme: v }) }
       }
 
-      Dropdown {
+      SearchableDropdown {
         width: parent.width
         label: "Dark theme"
+        placeholderText: "Search themes…"
         options: root.themeOptions
         value: root.setting("darkTheme", "Nord")
         foreground: root.bar.foreground
