@@ -12,6 +12,16 @@ BarWidget {
   property var themeOptions: []
   property bool popupOpen: false
 
+  // SearchableDropdown's own popup caps unfiltered browsing at 6 visible
+  // rows; with 24 stock themes that still means scrolling. Its
+  // popupMinHeight is a floor (Math.max against that 6-row cap), so raising
+  // it here — mirroring the component's own
+  // rowHeight*N + (N-1)*labelGap + space(50) formula with N=10 — buys more
+  // rows without touching the shared shell UI kit. Trade-off: once a search
+  // narrows results to just one or two, the floor still applies, leaving
+  // some empty space below them.
+  readonly property int themePopupMinHeight: Style.spacing.popupRowHeight * 10 + 9 * Style.spacing.labelGap + Style.space(50)
+
   function close() { popupOpen = false }
 
   // ---- Settings <-> Service wiring ----
@@ -176,6 +186,7 @@ BarWidget {
         options: root.themeOptions
         value: root.setting("lightTheme", "Flexoki Light")
         foreground: root.bar.foreground
+        popupMinHeight: root.themePopupMinHeight
         onChanged: function(v) { root.updateSetting({ lightTheme: v }) }
       }
 
@@ -186,6 +197,7 @@ BarWidget {
         options: root.themeOptions
         value: root.setting("darkTheme", "Nord")
         foreground: root.bar.foreground
+        popupMinHeight: root.themePopupMinHeight
         onChanged: function(v) { root.updateSetting({ darkTheme: v }) }
       }
 
