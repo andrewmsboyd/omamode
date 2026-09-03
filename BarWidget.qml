@@ -114,6 +114,20 @@ BarWidget {
     onPressed: function() { root.popupOpen = !root.popupOpen }
   }
 
+  // PopupCard is a fixed-size popup window: it only grows to fit
+  // column.implicitHeight, which doesn't account for a child Dropdown's own
+  // floating list popup (Popups don't participate in layout flow, so
+  // opening one never grows its parent's implicitHeight). With the Dark
+  // theme row sitting near the bottom of the column, its popup had nowhere
+  // to expand into and got clipped a couple of rows in. Mirror Dropdown's
+  // own popup-height cap formula here and, while either theme dropdown is
+  // open, size the card tall enough to fit that dropdown's full popup below
+  // it — the same live-resize path the schedule-time toggle already uses
+  // when it reveals extra rows.
+  readonly property int themeDropdownPopupCap: Math.min(
+    root.themeOptions.length * Style.spacing.popupRowHeight + Math.max(0, root.themeOptions.length - 1) * Style.spacing.labelGap + Style.spacing.xxs,
+    Style.spacing.popupRowHeight * 8 + 7 * Style.spacing.labelGap + Style.spacing.xxs)
+
   PopupCard {
     id: popup
     anchorItem: button
@@ -121,7 +135,10 @@ BarWidget {
     owner: root
     open: root.popupOpen
     contentWidth: Style.space(300)
-    contentHeight: popup.fittedContentHeight(column.implicitHeight)
+    contentHeight: popup.fittedContentHeight(Math.max(
+      column.implicitHeight,
+      lightDropdown.popupOpen ? lightDropdown.y + lightDropdown.height + root.themeDropdownPopupCap + Style.spacing.xxs : 0,
+      darkDropdown.popupOpen ? darkDropdown.y + darkDropdown.height + root.themeDropdownPopupCap + Style.spacing.xxs : 0))
 
     Column {
       id: column
@@ -170,6 +187,7 @@ BarWidget {
       }
 
       Dropdown {
+        id: lightDropdown
         width: parent.width
         label: "Light theme"
         options: root.themeOptions
@@ -179,6 +197,7 @@ BarWidget {
       }
 
       Dropdown {
+        id: darkDropdown
         width: parent.width
         label: "Dark theme"
         options: root.themeOptions
